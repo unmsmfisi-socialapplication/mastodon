@@ -2,7 +2,7 @@
 
 class Api::V2::MediaController < Api::V1::MediaController
   def create
-    unless supported_mime_type?(params["file"].content_type)
+    unless supported_mime_type?(params['file'].content_type)
       render json: file_type_error, status: 415
       return
     end
