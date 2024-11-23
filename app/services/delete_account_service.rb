@@ -14,6 +14,7 @@ class DeleteAccountService < BaseService
     conversations
     custom_filters
     domain_blocks
+    appeal_notes
     featured_tags
     follow_requests
     list_accounts
