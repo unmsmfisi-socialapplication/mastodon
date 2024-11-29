@@ -65,6 +65,21 @@ RSpec.describe 'Media API', :attachment_processing do
       end
     end
 
+    describe 'when media file is not supported' do
+      let(:params)            { { file: fixture_file_upload('attachment.not_supported_type', 'video/not_supported_type') } }
+
+      before do
+        allow(User).to receive(:find).with(token.resource_owner_id).and_return(user)
+      end
+
+      it 'returns http unsupported media type' do
+        post '/api/v2/media', headers: headers, params: params
+
+        expect(response)
+          .to have_http_status(415)
+      end
+    end
+
     describe 'when paperclip errors occur' do
       let(:media_attachments) { double }
       let(:params)            { { file: fixture_file_upload('attachment.jpg', 'image/jpeg') } }
