@@ -211,8 +211,8 @@ namespace :admin do
   end
 
   namespace :disputes do
-    resources :appeal_notes, only: [:create, :destroy]
-  end
+    resources :appeal_notes, only: [:create, :destroy]
+  end
 
   resources :software_updates, only: [:index]
 end
