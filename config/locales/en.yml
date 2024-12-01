@@ -389,6 +389,8 @@ en:
         empty: No appeals found.
         title: Appeals
       appeal_notes:
+        placeholder: "Describe what actions have been taken, or any other related updates about this appeal..."
+        create: Add note
         created_msg: "Appeal note successfully created!"
         destroyed_msg: "Appeal note successfully deleted!"
     domain_allows:
