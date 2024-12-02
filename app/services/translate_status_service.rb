@@ -82,7 +82,15 @@ class TranslateStatusService < BaseService
       case source
       when :content
         node = unwrap_emoji_shortcodes(translation.text)
-        Sanitize.node!(node, Sanitize::Config::MASTODON_STRICT)
+	
+	#Validate Hashtag
+	node.css('a.mention.hashtag').each do |link|
+	  href = link['href']
+	  link['href'] = href.chomp('.') if href.end_with?('.') # Remove additional dot from link
+	  link.content = link.content.chomp('.') if link.content.end_with?('.') # Remove additional dot from hashtag text
+	end
+
+	Sanitize.node!(node, Sanitize::Config::MASTODON_STRICT)
         status_translation.content = node.to_html
       when :spoiler_text
         status_translation.spoiler_text = unwrap_emoji_shortcodes(translation.text).content
