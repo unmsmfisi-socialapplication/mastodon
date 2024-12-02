@@ -6,7 +6,7 @@ class AppealNotePolicy < ApplicationPolicy
   end
 
   def destroy?
-    owner? || (role.can?(:manage_appeals) && role.overrides?(record.account.user_role))
+    owner?
   end
 
   private
