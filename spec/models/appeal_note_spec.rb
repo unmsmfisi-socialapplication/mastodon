@@ -7,8 +7,8 @@ RSpec.describe AppealNote do
     describe '.chronological' do
       it 'returns appeal notes oldest to newest' do
         appeal = Fabricate(:appeal)
-        note1 = Fabricate(:appeal_note, appeal: report)
-        note2 = Fabricate(:appeal_note, appeal: report)
+        note1 = Fabricate(:appeal_note, appeal: appeal)
+        note2 = Fabricate(:appeal_note, appeal: appeal)
 
         expect(report.notes.chronological).to eq [note1, note2]
       end
