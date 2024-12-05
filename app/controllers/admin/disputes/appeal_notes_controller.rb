@@ -22,7 +22,7 @@ class Admin::Disputes::AppealNotesController < Admin::BaseController
   def destroy
     authorize @appeal_note, :destroy?
     @appeal_note.destroy!
-    redirect_to admin_disputes_strike_path(@appeal_note.appeal_id), notice: I18n.t('admin.disputes.appeal_notes.destroyed_msg')
+    redirect_to admin_disputes_strike_path(@appeal.strike), notice: I18n.t('admin.disputes.appeal_notes.destroyed_msg')
   end
 
   private
