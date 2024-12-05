@@ -28,11 +28,7 @@ class Admin::Disputes::AppealNotesController < Admin::BaseController
   private
 
   def after_create_redirect_path
-    if params[:create_and_resolve]
-      admin_disputes_appeals_path
-    else
-      admin_disputes_strike_path(@appeal.strike)
-    end
+    admin_disputes_strike_path(@appeal.strike)
   end
 
   def resource_params
