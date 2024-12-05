@@ -908,7 +908,7 @@ DEPENDENCIES
   discard (~> 1.2)
   doorkeeper (~> 5.6)
   dotenv
-  email_spec (~> 2.3)
+  email_spec
   fabrication (~> 2.30)
   faker (~> 3.2)
   faraday-httpclient
