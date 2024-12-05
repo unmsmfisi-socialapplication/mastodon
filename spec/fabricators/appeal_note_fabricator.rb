@@ -1,5 +1,5 @@
 Fabricator(:appeal_note) do
-  appeal { Fabricate.build(:appeal) }
+  appeal { Fabricate.create(:appeal) }
   account { Fabricate.build(:account) }
   content { Faker::Lorem.sentences }
 end
