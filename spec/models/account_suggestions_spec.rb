@@ -106,6 +106,22 @@ RSpec.describe AccountSuggestions do
       end
     end
 
+    context 'when handling missing accounts' do
+      let(:mock_suggestions) do
+        [
+          [1, ['friends_of_friends']],
+          [999, ['similar_profiles']], # Non-existent account
+          [3, ['global']],
+        ]
+      end
+
+      it 'filters out non-existent accounts gracefully' do
+        results = suggestion_service.get(limit)
+        expect(results.length).to eq(2)
+        expect(results.map { |r| r.account.id }).to_not include(999)
+      end
+    end
+
     context 'when handling BATCH_SIZE limits' do
       let(:base_id) { 1000 }
 
@@ -131,6 +147,96 @@ RSpec.describe AccountSuggestions do
 
         results = suggestion_service.get(50)
         expect(results.length).to be <= described_class::BATCH_SIZE
+      end
+    end
+  end
+
+  describe 'source integration behavior' do
+    context 'when regenerating cache from all available sources' do
+      before do
+        allow(Rails.cache).to receive(:fetch).and_yield
+
+        allow(AccountSuggestions::SettingSource).to receive(:new)
+          .and_return(instance_double(AccountSuggestions::SettingSource, get: [[1, [:setting]]]))
+        allow(AccountSuggestions::FriendsOfFriendsSource).to receive(:new)
+          .and_return(instance_double(AccountSuggestions::FriendsOfFriendsSource, get: [[2, [:friends_of_friends]]]))
+        allow(AccountSuggestions::SimilarProfilesSource).to receive(:new)
+          .and_return(instance_double(AccountSuggestions::SimilarProfilesSource, get: [[3, [:similar_profiles]]]))
+        allow(AccountSuggestions::GlobalSource).to receive(:new)
+          .and_return(instance_double(AccountSuggestions::GlobalSource, get: [[4, [:global]]]))
+
+        [1, 2, 3, 4].each { |id| Fabricate(:account, id: id) }
+      end
+
+      it 'combines and aggregates results from all sources correctly' do
+        results = suggestion_service.get(4)
+
+        expect(results.map { |r| r.account.id }).to contain_exactly(1, 2, 3, 4)
+
+        sources = results.map(&:sources)
+        expect(sources).to include(
+          [:setting],
+          [:friends_of_friends],
+          [:similar_profiles],
+          [:global]
+        )
+      end
+
+      it 'aggregates sources when the same account is suggested multiple times' do
+        suggested_account = Fabricate(:account)
+
+        allow(AccountSuggestions::SettingSource).to receive(:new)
+          .and_return(instance_double(AccountSuggestions::SettingSource,
+            get: [[suggested_account.id, [:setting]]]))
+        allow(AccountSuggestions::GlobalSource).to receive(:new)
+          .and_return(instance_double(AccountSuggestions::GlobalSource,
+            get: [[suggested_account.id, [:global]]]))
+
+        allow(AccountSuggestions::FriendsOfFriendsSource).to receive(:new)
+          .and_return(instance_double(AccountSuggestions::FriendsOfFriendsSource, get: []))
+        allow(AccountSuggestions::SimilarProfilesSource).to receive(:new)
+          .and_return(instance_double(AccountSuggestions::SimilarProfilesSource, get: []))
+
+        results = suggestion_service.get(1)
+        suggestion = results.first
+
+        expect(suggestion.sources).to contain_exactly(:setting, :global)
+        expect(results.length).to eq(1)
+      end
+
+      it 'handles malformed source responses gracefully' do
+        test_account_1 = Fabricate(:account, username: 'malformed_test_1')
+        test_account_2 = Fabricate(:account, username: 'malformed_test_2')
+        test_account_3 = Fabricate(:account, username: 'malformed_test_3')
+        test_account_4 = Fabricate(:account, username: 'malformed_test_4')
+
+        allow(Rails.cache).to receive(:fetch).and_yield
+
+        allow(AccountSuggestions::SettingSource).to receive(:new)
+          .and_return(instance_double(AccountSuggestions::SettingSource,
+            get: [
+              [test_account_1.id, nil],
+              [test_account_2.id, []],
+              [test_account_3.id, 'invalid'],
+              [test_account_4.id, [:valid]]
+            ]))
+
+        [AccountSuggestions::FriendsOfFriendsSource,
+         AccountSuggestions::SimilarProfilesSource,
+         AccountSuggestions::GlobalSource].each do |source|
+          allow(source).to receive(:new)
+            .and_return(instance_double(source, get: []))
+        end
+
+        results = suggestion_service.get(4)
+
+        expect(results).to all(be_a(AccountSuggestions::Suggestion))
+        expect(results.map { |r| r.sources }).to all(be_an(Array))
+        expect(results.map { |r| r.sources.flatten }).to all(all(be_a(Symbol)))
+
+        result_ids = results.map { |r| r.account.id }
+        expect(result_ids).to include(test_account_1.id, test_account_2.id,
+                                    test_account_3.id, test_account_4.id)
       end
     end
   end
