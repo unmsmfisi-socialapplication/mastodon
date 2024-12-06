@@ -15,7 +15,7 @@ class Admin::Disputes::AppealNotesController < Admin::BaseController
     else
       @appeal_notes = @appeal.notes.chronological.includes(:account)
       @form         = Admin::StatusBatchAction.new
-      
+
       render 'admin/disputes/strikes/show'
     end
   end

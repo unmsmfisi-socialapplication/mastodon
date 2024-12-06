@@ -17,7 +17,6 @@ RSpec.describe Admin::Disputes::AppealNotesController do
   describe 'POST #create' do
     subject { post :create, params: params }
 
-
     context 'when parameters are valid' do
       let(:params) { { appeal_note: { appeal_id: appeal.id, content: 'Valid content' } } }
 
@@ -40,7 +39,7 @@ RSpec.describe Admin::Disputes::AppealNotesController do
 
   describe 'DELETE #destroy' do
     subject { delete :destroy, params: { id: appeal_note.id } }
-    
+
     let!(:appeal_note) { Fabricate(:appeal_note, appeal: appeal, account: account) }
 
     it 'deletes the appeal note' do

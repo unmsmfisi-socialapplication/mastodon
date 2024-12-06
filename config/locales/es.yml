@@ -386,10 +386,10 @@ es:
       website: Sitio web
     disputes:
       appeal_notes:
-        placeholder: "Describa qué acciones se han tomado o cualquier otra actualización relacionada con esta apelación..."
         create: Agregar nota
         created_msg: "¡Nota de apelación creada exitosamente!"
         destroyed_msg: "¡Nota de apelación eliminada exitosamente!"
+        placeholder: Describa qué acciones se han tomado o cualquier otra actualización relacionada con esta apelación...
       appeals:
         empty: No se encontraron apelaciones.
         title: Apelaciones

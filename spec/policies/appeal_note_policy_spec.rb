@@ -2,13 +2,13 @@
 
 require 'rails_helper'
 
-RSpec.describe AppealNotePolicy  do
+RSpec.describe AppealNotePolicy do
   subject { described_class }
 
-  let(:admin)   { Fabricate(:user, role: UserRole.find_by(name: 'Admin')).account }
-  let(:admin2)   { Fabricate(:user, role: UserRole.find_by(name: 'Admin')).account }
+  let(:admin) { Fabricate(:user, role: UserRole.find_by(name: 'Admin')).account }
+  let(:admin2) { Fabricate(:user, role: UserRole.find_by(name: 'Admin')).account }
 
-  let(:john)    { Fabricate(:account) }
+  let(:john) { Fabricate(:account) }
 
   permissions :create? do
     context 'when staff?' do
