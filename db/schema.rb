@@ -267,6 +267,16 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_04_082851) do
     t.index ["year", "account_id"], name: "idx_on_year_account_id_ff3e167cef", unique: true
   end
 
+  create_table "appeal_notes", force: :cascade do |t|
+    t.text "content", null: false
+    t.bigint "appeal_id", null: false
+    t.bigint "account_id", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["account_id"], name: "index_appeal_notes_on_account_id"
+    t.index ["appeal_id"], name: "index_appeal_notes_on_appeal_id"
+  end
+
   create_table "appeals", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "account_warning_id", null: false
@@ -1317,6 +1327,10 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_04_082851) do
   add_foreign_key "preview_cards", "accounts", column: "author_account_id", on_delete: :nullify
   add_foreign_key "report_notes", "accounts", on_delete: :cascade
   add_foreign_key "report_notes", "reports", on_delete: :cascade
+
+  add_foreign_key "appeal_notes", "accounts", on_delete: :cascade
+  add_foreign_key "appeal_notes", "appeals", on_delete: :cascade
+
   add_foreign_key "reports", "accounts", column: "action_taken_by_account_id", name: "fk_bca45b75fd", on_delete: :nullify
   add_foreign_key "reports", "accounts", column: "assigned_account_id", on_delete: :nullify
   add_foreign_key "reports", "accounts", column: "target_account_id", name: "fk_eb37af34f0", on_delete: :cascade

@@ -385,6 +385,11 @@ es:
       top_servers: Servidores más activos
       website: Sitio web
     disputes:
+      appeal_notes:
+        create: Agregar nota
+        created_msg: "¡Nota de apelación creada exitosamente!"
+        destroyed_msg: "¡Nota de apelación eliminada exitosamente!"
+        placeholder: Describa qué acciones se han tomado o cualquier otra actualización relacionada con esta apelación...
       appeals:
         empty: No se encontraron apelaciones.
         title: Apelaciones
@@ -1234,6 +1239,7 @@ es:
       action_taken: Acción realizada
       appeal: Apelar
       appeal_approved: Esta amonestación fue apelada exitosamente y ya no es válida
+      appeal_note: Notas de apelación
       appeal_rejected: Se rechazó la apelación
       appeal_submitted_at: Apelación enviada
       appealed_msg: Tu apelación fue enviada. Si se aprueba, se te notificará.

@@ -206,5 +206,13 @@ namespace :admin do
     end
   end
 
+  namespace :disputes do
+    resources :strikes, only: [:index, :show]
+  end
+
+  namespace :disputes do
+    resources :appeal_notes, only: [:create, :destroy]
+  end
+
   resources :software_updates, only: [:index]
 end

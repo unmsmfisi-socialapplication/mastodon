@@ -1,6 +1,10 @@
 - content_for :page_title do
   = t('disputes.strikes.title', action: t(@strike.action, scope: 'disputes.strikes.title_actions'), date: l(@strike.created_at.to_date))
 
+- content_for :heading_actions do
+  = link_to t('disputes.strikes.approve_appeal'), approve_admin_disputes_appeal_path(@appeal), method: :post, class: 'button' if can?(:approve, @appeal)
+  = link_to t('disputes.strikes.reject_appeal'), reject_admin_disputes_appeal_path(@appeal), method: :post, class: 'button button--destructive' if can?(:reject, @appeal)
+
 - if @strike.overruled?
   %p.hint
     %span.positive-hint
@@ -51,27 +55,38 @@
           %time.formatted{ datetime: @appeal.created_at.iso8601, title: l(@appeal.created_at) }= l(@appeal.created_at)
 %hr.spacer/
 
-- if @appeal.persisted?
-  %h3= t('disputes.strikes.appeal')
+%h3= t('disputes.strikes.appeal')
 
-  .report-notes
-    .report-notes__item
-      = image_tag @appeal.account.avatar.url, class: 'report-notes__item__avatar'
+.report-notes
+  .report-notes__item
+    = image_tag @appeal.account.avatar.url, class: 'report-notes__item__avatar'
 
-      .report-notes__item__header
-        %span.username
-          = link_to @appeal.account.username, can?(:show, @appeal.account) ? admin_account_path(@appeal.account_id) : short_account_url(@appeal.account)
-        %time.relative-formatted{ datetime: @appeal.created_at.iso8601 }
-          = l @appeal.created_at.to_date
+    .report-notes__item__header
+      %span.username
+        = link_to @appeal.account.username, can?(:show, @appeal.account) ? admin_account_path(@appeal.account_id) : short_account_url(@appeal.account)
+      %time.relative-formatted{ datetime: @appeal.created_at.iso8601 }
+        = l @appeal.created_at.to_date
 
-      .report-notes__item__content
-        = simple_format(h(@appeal.text))
-- elsif can?(:appeal, @strike)
-  %h3= t('disputes.strikes.appeals.submit')
+    .report-notes__item__content
+      = simple_format(h(@appeal.text))
 
-  = simple_form_for(@appeal, url: disputes_strike_appeal_path(@strike)) do |f|
-    .fields-group
-      = f.input :text, wrapper: :with_label, input_html: { maxlength: Appeal::TEXT_LENGTH_LIMIT }
+%hr.spacer/
+%h3= t('disputes.strikes.appeal_note')
+%hr.spacer/
 
-    .actions
-      = f.button :button, t('disputes.strikes.appeals.submit'), type: :submit
+.report-notes
+  = render @appeal_notes
+
+%hr.spacer/
+
+
+= simple_form_for @appeal_note, url: admin_disputes_appeal_notes_path do |form|
+  = form.input :appeal_id, as: :hidden
+
+  = render 'shared/error_messages', object: @appeal_note
+
+  .field-group
+    = form.input :content, input_html: { placeholder: t('admin.disputes.appeal_notes.placeholder'), maxlength: AppealNote::CONTENT_SIZE_LIMIT, rows: 6, autofocus: @appeal_note.errors.any? }
+
+  .actions
+    = form.button :button, t('admin.disputes.appeal_notes.create'), type: :submit

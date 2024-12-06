@@ -385,6 +385,11 @@ en:
       top_servers: Top active servers
       website: Website
     disputes:
+      appeal_notes:
+        create: Add note
+        created_msg: Appeal note successfully created!
+        destroyed_msg: Appeal note successfully deleted!
+        placeholder: Describe what actions have been taken, or any other related updates about this appeal...
       appeals:
         empty: No appeals found.
         title: Appeals
@@ -1234,6 +1239,7 @@ en:
       action_taken: Action taken
       appeal: Appeal
       appeal_approved: This strike has been successfully appealed and is no longer valid
+      appeal_note: Appeal notes
       appeal_rejected: The appeal has been rejected
       appeal_submitted_at: Appeal submitted
       appealed_msg: Your appeal has been submitted. If it is approved, you will be notified.

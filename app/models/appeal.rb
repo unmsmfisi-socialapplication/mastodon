@@ -22,6 +22,7 @@ class Appeal < ApplicationRecord
 
   belongs_to :account
   belongs_to :strike, class_name: 'AccountWarning', foreign_key: 'account_warning_id', inverse_of: :appeal
+  has_many :notes, class_name: 'AppealNote', inverse_of: :appeal, dependent: :destroy
 
   with_options class_name: 'Account', optional: true do
     belongs_to :approved_by_account
