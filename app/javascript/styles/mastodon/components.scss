@@ -6916,15 +6916,12 @@ a.status-card {
 
 .media-gallery__item-thumbnail {
   cursor: pointer;
-  display: block;
   text-decoration: none;
   color: $secondary-text-color;
   position: relative;
-  z-index: -1;
 
   &,
   img {
-    height: 100%;
     width: 100%;
   }
 
