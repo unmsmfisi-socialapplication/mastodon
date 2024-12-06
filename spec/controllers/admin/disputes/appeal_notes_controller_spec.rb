@@ -46,6 +46,6 @@ RSpec.describe Admin::Disputes::AppealNotesController do
       expect { subject }.to change(AppealNote, :count).by(-1)
       expect(response).to redirect_to admin_disputes_strike_path(appeal.id)
       expect(flash[:notice]).to eq(I18n.t('admin.disputes.appeal_notes.destroyed_msg'))
-    end
-  end
+    end
+  end
 end
