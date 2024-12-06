@@ -59,13 +59,26 @@ class EditedTimestamp extends PureComponent {
     );
   };
 
+  formatDateWithOptionalYear (timestamp) {
+    const date = new Date(timestamp);
+    const currentYear = new Date().getFullYear();
+    const includeYear = date.getFullYear() !== currentYear;
+    return this.props.intl.formatDate(timestamp, {
+      year: includeYear ? 'numeric' : undefined,
+      month: 'short',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
   render () {
-    const { timestamp, intl, statusId } = this.props;
+    const { timestamp, statusId } = this.props;
 
     return (
       <DropdownMenu statusId={statusId} renderItem={this.renderItem} scrollable renderHeader={this.renderHeader} onItemClick={this.handleItemClick}>
         <button className='dropdown-menu__text-button'>
-          <FormattedMessage id='status.edited' defaultMessage='Edited {date}' values={{ date: <span className='animated-number'>{intl.formatDate(timestamp, { month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</span> }} />
+          <FormattedMessage id='status.edited' defaultMessage='Edited {date}' values={{ date: <span className='animated-number'>{this.formatDateWithOptionalYear(timestamp)}</span> }} />
         </button>
       </DropdownMenu>
     );
