@@ -137,6 +137,57 @@ RSpec.describe UpdateStatusService do
     end
   end
 
+  context 'when only text changes in a status with poll' do
+    let(:account) { Fabricate(:account) }
+    let!(:status) do
+      Fabricate(:status,
+        text: 'Original question?',
+        account: account,
+        poll_attributes: {
+          options: %w(Yes No),
+          account: account,
+          multiple: false,
+          hide_totals: false,
+          expires_at: 7.days.from_now
+        }
+      )
+    end
+    let!(:poll) { status.poll }
+    let!(:voter) { Fabricate(:account) }
+  
+    before do
+      status.update(poll: poll)
+      VoteService.new.call(voter, poll, [0])  # Agregamos un voto
+    end
+  
+    it 'should reset poll votes when only text changes' do
+      # Actualizamos solo el texto, manteniendo la misma encuesta
+      subject.call(
+        status,
+        status.account_id,
+        text: 'Modified question?',
+        poll: {
+          options: %w(Yes No),
+          multiple: false,
+          hide_totals: false,
+          expires_in: 7.days.to_i
+        }
+      )
+  
+      poll = status.poll.reload
+  
+      # Este test fallará porque actualmente los votos no se resetean
+      # cuando solo cambia el texto
+      expect(poll)
+        .to have_attributes(
+          options: %w(Yes No),
+          votes_count: 0,          # Debería ser 0 pero será 1
+          cached_tallies: [0, 0]   # Debería ser [0, 0] pero será [1, 0]
+        )
+      expect(poll.votes.count).to eq(0)  # Debería ser 0 pero será 1
+    end
+  end
+
   context 'when mentions in text change' do
     let!(:account) { Fabricate(:account) }
     let!(:alice) { Fabricate(:account, username: 'alice') }

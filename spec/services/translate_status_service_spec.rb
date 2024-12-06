@@ -143,6 +143,40 @@ RSpec.describe TranslateStatusService do
         expect(source_texts[:content]).to include '/tags/hola'
       end
     end
+    
+    describe 'status with hashtags' do
+      let(:text) { 'Mira el evento #Dana2024' }
+      let(:status) { Fabricate(:status, text: text, language: 'es') }
+  
+      before do
+        # Simular el servicio de traducción para evitar consultas HTTP reales
+	translation_service = TranslationService.new
+	allow(translation_service).to receive(:languages).and_return({ 'es' => ['en'] })
+	
+	allow(translation_service).to receive(:translate).with(
+          array_including("<p>Mira el evento <a href=\"https://cb6e6126.ngrok.io/tags/Dana2024\" class=\"mention hashtag\" rel=\"tag\">#<span>Dana2024</span></a></p>"),
+          'es', 'en'
+        ).and_return([
+	  TranslationService::Translation.new(
+	    text: '<p>Check out the event <a href="https://cb6e6126.ngrok.io/tags/Dana2024." class="mention hashtag" rel="tag">#<span>Dana2024.</span></a></p>',
+            detected_source_language: 'es',
+            provider: 'Dummy'
+          )
+        ])
+        
+        allow(TranslationService).to receive(:configured?).and_return(true)
+        allow(TranslationService).to receive(:configured).and_return(translation_service)
+      end
+	
+      it 'does not modify hashtags during translation' do
+        # Ejecutar la traducción
+        status_translation = service.call(status, 'en')
+      
+        # Validar que el hashtag traducido no se modifique
+        expect(status_translation.content).to include('https://cb6e6126.ngrok.io/tags/Dana2024')
+        expect(status_translation.content).not_to include('https://cb6e6126.ngrok.io/tags/Dana2024.') # Verificamos que no haya punto adicional
+      end
+    end
 
     describe 'status has spoiler text' do
       let(:status) { Fabricate(:status, spoiler_text: 'Hello :highfive:') }
@@ -226,4 +260,5 @@ RSpec.describe TranslateStatusService do
       end
     end
   end
+
 end
