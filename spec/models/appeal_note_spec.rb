@@ -10,7 +10,7 @@ RSpec.describe AppealNote do
         note1 = Fabricate(:appeal_note, appeal: appeal)
         note2 = Fabricate(:appeal_note, appeal: appeal)
 
-        expect(report.notes.chronological).to eq [note1, note2]
+        expect(appeal.notes.chronological).to eq [note1, note2]
       end
     end
   end
