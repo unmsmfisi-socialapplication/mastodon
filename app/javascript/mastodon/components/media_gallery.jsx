@@ -96,6 +96,7 @@ class Item extends PureComponent {
     if (size === 4 || (size === 3 && index > 0)) {
       height = 50;
     }
+    let isNeedScrolll = false;
 
     const description = attachment.getIn(['translation', 'description']) || attachment.get('description');
 
@@ -118,6 +119,7 @@ class Item extends PureComponent {
     } else if (attachment.get('type') === 'image') {
       const previewUrl   = attachment.get('preview_url');
       const previewWidth = attachment.getIn(['meta', 'small', 'width']);
+      const originalHeight = attachment.getIn(['meta', 'original', 'height']);
 
       const originalUrl   = attachment.get('url');
       const originalWidth = attachment.getIn(['meta', 'original', 'width']);
@@ -131,6 +133,9 @@ class Item extends PureComponent {
       const focusY = attachment.getIn(['meta', 'focus', 'y']) || 0;
       const x      = ((focusX /  2) + .5) * 100;
       const y      = ((focusY / -2) + .5) * 100;
+      if (originalHeight > 600) {
+        isNeedScrolll = true;
+      }
 
       thumbnail = (
         <a
@@ -139,6 +144,9 @@ class Item extends PureComponent {
           onClick={this.handleClick}
           target='_blank'
           rel='noopener noreferrer'
+          style={{
+            height: originalHeight,
+          }}
         >
           <img
             src={previewUrl}
@@ -185,7 +193,10 @@ class Item extends PureComponent {
     }
 
     return (
-      <div className={classNames('media-gallery__item', { standalone, 'media-gallery__item--tall': height === 100, 'media-gallery__item--wide': width === 100 })} key={attachment.get('id')}>
+      <div className={classNames('media-gallery__item', { standalone, 'media-gallery__item--tall': height === 100, 'media-gallery__item--wide': width === 100 })} key={attachment.get('id')} style={{
+        overflowY: isNeedScrolll ? 'auto' : 'hidden',
+        height: 600,
+      }}>
         <Blurhash
           hash={attachment.get('blurhash')}
           dummy={!useBlurhash}
