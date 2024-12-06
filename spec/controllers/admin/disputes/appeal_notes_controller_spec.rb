@@ -8,6 +8,7 @@ RSpec.describe Admin::Disputes::AppealNotesController do
   let(:user) { Fabricate(:user, role: UserRole.find_by(name: 'Admin')) }
   let(:account) { user.account }
   let(:appeal) { Fabricate(:appeal) }
+  let(:strike) { Fabricate(:account_warning, appeal: appeal) }
 
   before do
     sign_in user, scope: :user
@@ -39,12 +40,12 @@ RSpec.describe Admin::Disputes::AppealNotesController do
 
   describe 'DELETE #destroy' do
     subject { delete :destroy, params: { id: appeal_note.id } }
-
-    let!(:appeal_note) { Fabricate(:appeal_note, appeal: appeal) }
+    
+    let!(:appeal_note) { Fabricate(:appeal_note, appeal: appeal, account: account) }
 
     it 'deletes the appeal note' do
       expect { subject }.to change(AppealNote, :count).by(-1)
-      expect(response).to redirect_to admin_disputes_strike_path(appeal.id)
+      expect(response).to redirect_to admin_disputes_strike_path(appeal.strike)
       expect(flash[:notice]).to eq(I18n.t('admin.disputes.appeal_notes.destroyed_msg'))
     end
   end
