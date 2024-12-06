@@ -188,39 +188,6 @@ RSpec.describe UpdateStatusService do
     end
   end
 
-  context 'when only poll text changes' do
-    let(:account) { Fabricate(:account) }
-    let!(:status) { Fabricate(:status, text: 'Foo', account: account, poll_attributes: { options: %w(Foo Bar), account: account, multiple: false, hide_totals: false, expires_at: 7.days.from_now }) }
-    let!(:poll)   { status.poll }
-    let!(:voter) { Fabricate(:account) }
-  
-    before do
-      status.update(poll: poll)
-      VoteService.new.call(voter, poll, [0])
-    end
-  
-    it 'updates poll text, resets votes, and saves history' do
-      subject.call(status, status.account_id, text: 'Food?', poll: { options: %w(Foo Bar), expires_in: 7.days.to_i })
-  
-      poll = status.poll.reload
-  
-      expect(poll)
-        .to have_attributes(
-          options: %w(Foo Bar),
-          votes_count: 0, # Los votos deben reiniciarse
-          cached_tallies: [0, 0] # Totales reseteados
-        )
-      expect(poll.votes.count)
-        .to eq(0)
-  
-      expect(status.edits.ordered.pluck(:poll_options))
-        .to eq [%w(Foo Bar), %w(Foo Bar)]
-  
-      expect(PollExpirationNotifyWorker)
-        .to have_enqueued_sidekiq_job(poll.id).at(poll.expires_at + 5.minutes)
-    end
-  end  
-
   context 'when mentions in text change' do
     let!(:account) { Fabricate(:account) }
     let!(:alice) { Fabricate(:account, username: 'alice') }

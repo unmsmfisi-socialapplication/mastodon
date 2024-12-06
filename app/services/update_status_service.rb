@@ -85,28 +85,35 @@ class UpdateStatusService < BaseService
   def update_poll!
     previous_poll        = @status.preloadable_poll
     @previous_expires_at = previous_poll&.expires_at
-
+    previous_text       = @status.text
+  
     if @options[:poll].present?
       poll = previous_poll || @status.account.polls.new(status: @status, votes_count: 0)
-
-      # If for some reasons the options were changed, it invalidates all previous
-      # votes, so we need to remove them
-      @poll_changed = true if @options[:poll][:options] != poll.options || ActiveModel::Type::Boolean.new.cast(@options[:poll][:multiple]) != poll.multiple
-
+  
+      # Agregamos la comparación del texto
+      @poll_changed = if @options[:text].present?
+        @options[:text] != previous_text ||
+        @options[:poll][:options] != poll.options ||
+        ActiveModel::Type::Boolean.new.cast(@options[:poll][:multiple]) != poll.multiple
+      else
+        @options[:poll][:options] != poll.options ||
+        ActiveModel::Type::Boolean.new.cast(@options[:poll][:multiple]) != poll.multiple
+      end
+  
       poll.options     = @options[:poll][:options]
       poll.hide_totals = @options[:poll][:hide_totals] || false
       poll.multiple    = @options[:poll][:multiple] || false
       poll.expires_in  = @options[:poll][:expires_in]
       poll.reset_votes! if @poll_changed
       poll.save!
-
+  
       @status.poll_id = poll.id
     elsif previous_poll.present?
       previous_poll.destroy
       @poll_changed = true
       @status.poll_id = nil
     end
-
+  
     @poll_changed = true if @previous_expires_at != @status.preloadable_poll&.expires_at
   end
 
