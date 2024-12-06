@@ -97,5 +97,41 @@ RSpec.describe AccountSuggestions do
         expect(results.length).to eq(2)
       end
     end
+
+    context 'when handling cache behavior' do
+      it 'caches the results with appropriate expiration' do
+        suggestion_service.get(limit)
+        expect(Rails.cache).to have_received(:fetch)
+          .with("follow_recommendations/#{account.id}", expires_in: 15.minutes)
+      end
+    end
+
+    context 'when handling BATCH_SIZE limits' do
+      let(:base_id) { 1000 }
+
+      it 'respects the BATCH_SIZE constant when gathering suggestions' do
+        allow(Rails.cache).to receive(:fetch).and_yield
+        sources_double = instance_double(AccountSuggestions::GlobalSource)
+
+        accounts = (base_id...(base_id + 50)).map do |i|
+          Fabricate(:account, username: "user#{i}")
+        end
+
+        allow(sources_double).to receive(:get).and_return(
+          accounts.map { |acc| [acc.id, ['global']] }
+        )
+        allow(AccountSuggestions::GlobalSource).to receive(:new).and_return(sources_double)
+
+        [AccountSuggestions::SettingSource,
+         AccountSuggestions::FriendsOfFriendsSource,
+         AccountSuggestions::SimilarProfilesSource].each do |source|
+          allow(source).to receive(:new)
+            .and_return(instance_double(source, get: []))
+        end
+
+        results = suggestion_service.get(50)
+        expect(results.length).to be <= described_class::BATCH_SIZE
+      end
+    end
   end
 end
