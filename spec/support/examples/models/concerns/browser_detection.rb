@@ -1,26 +1,27 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples 'BrowserDetection' do
-  subject { described_class.new(user_agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1 Safari/605.1.15') }
+  # subject { described_class.new(user_agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1 Safari/605.1.15') }
+  subject { described_class.new(user_agent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/606 (KHTML, like Gecko) Version/16.0 Safari/606 Epiphany/3.32') }
 
   describe '#detection' do
     it 'sets a Browser instance as detection' do
       expect(subject.detection)
-        .to be_a(Browser::Safari)
+        .to be_a(Browser::Epiphany)
     end
   end
 
   describe '#browser' do
     it 'returns browser name from id' do
       expect(subject.browser)
-        .to eq(:safari)
+        .to eq(:epiphany)
     end
   end
 
   describe '#platform' do
     it 'returns detected platform' do
       expect(subject.platform)
-        .to eq(:mac)
+        .to eq(:linux)
     end
   end
 
