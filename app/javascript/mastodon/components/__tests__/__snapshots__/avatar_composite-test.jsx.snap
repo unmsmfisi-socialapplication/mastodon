@@ -1,0 +1,225 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AvatarComposite /> renders correctly with a list of accounts and size 100 1`] = `
+<div
+  className="account__avatar-composite"
+  style={
+    {
+      "height": "100px",
+      "width": "100px",
+    }
+  }
+>
+  <div
+    style={
+      {
+        "bottom": "1px",
+        "height": "50%",
+        "left": "auto",
+        "right": "1px",
+        "top": "auto",
+        "width": "50%",
+      }
+    }
+  >
+    <div
+      className="account__avatar account__avatar--loading"
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      style={
+        {
+          "height": "20px",
+          "width": "20px",
+        }
+      }
+    />
+  </div>
+  <div
+    style={
+      {
+        "bottom": "1px",
+        "height": "50%",
+        "left": "1px",
+        "right": "auto",
+        "top": "auto",
+        "width": "50%",
+      }
+    }
+  >
+    <div
+      className="account__avatar account__avatar--loading"
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      style={
+        {
+          "height": "20px",
+          "width": "20px",
+        }
+      }
+    />
+  </div>
+  <div
+    style={
+      {
+        "bottom": "auto",
+        "height": "50%",
+        "left": "auto",
+        "right": "1px",
+        "top": "1px",
+        "width": "50%",
+      }
+    }
+  >
+    <div
+      className="account__avatar account__avatar--loading"
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      style={
+        {
+          "height": "20px",
+          "width": "20px",
+        }
+      }
+    />
+  </div>
+  <div
+    style={
+      {
+        "bottom": "auto",
+        "height": "50%",
+        "left": "1px",
+        "right": "auto",
+        "top": "1px",
+        "width": "50%",
+      }
+    }
+  >
+    <div
+      className="account__avatar account__avatar--loading"
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      style={
+        {
+          "height": "20px",
+          "width": "20px",
+        }
+      }
+    />
+  </div>
+</div>
+`;
+
+exports[`<AvatarComposite /> renders correctly with more than 4 accounts 1`] = `
+<div
+  className="account__avatar-composite"
+  style={
+    {
+      "height": "100px",
+      "width": "100px",
+    }
+  }
+>
+  <div
+    style={
+      {
+        "bottom": "1px",
+        "height": "50%",
+        "left": "auto",
+        "right": "1px",
+        "top": "auto",
+        "width": "50%",
+      }
+    }
+  >
+    <div
+      className="account__avatar account__avatar--loading"
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      style={
+        {
+          "height": "20px",
+          "width": "20px",
+        }
+      }
+    />
+  </div>
+  <div
+    style={
+      {
+        "bottom": "1px",
+        "height": "50%",
+        "left": "1px",
+        "right": "auto",
+        "top": "auto",
+        "width": "50%",
+      }
+    }
+  >
+    <div
+      className="account__avatar account__avatar--loading"
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      style={
+        {
+          "height": "20px",
+          "width": "20px",
+        }
+      }
+    />
+  </div>
+  <div
+    style={
+      {
+        "bottom": "auto",
+        "height": "50%",
+        "left": "auto",
+        "right": "1px",
+        "top": "1px",
+        "width": "50%",
+      }
+    }
+  >
+    <div
+      className="account__avatar account__avatar--loading"
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      style={
+        {
+          "height": "20px",
+          "width": "20px",
+        }
+      }
+    />
+  </div>
+  <div
+    style={
+      {
+        "bottom": "auto",
+        "height": "50%",
+        "left": "1px",
+        "right": "auto",
+        "top": "1px",
+        "width": "50%",
+      }
+    }
+  >
+    <div
+      className="account__avatar account__avatar--loading"
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      style={
+        {
+          "height": "20px",
+          "width": "20px",
+        }
+      }
+    />
+  </div>
+  <span
+    className="account__avatar-composite__label"
+  >
+    +
+    2
+  </span>
+</div>
+`;
