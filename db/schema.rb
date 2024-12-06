@@ -482,6 +482,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_04_082851) do
     t.index ["account_id"], name: "index_follow_recommendation_suppressions_on_account_id", unique: true
   end
 
+  #Añadir viewed default false, a traves de la migración AddViewedToFollowRequests
   create_table "follow_requests", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false

@@ -41,13 +41,24 @@ class Api::V1::FollowRequestsController < Api::BaseController
   end
 
   def paginated_follow_requests
-    FollowRequest.where(target_account: current_account).paginate_by_max_id(
+    FollowRequest.where(target_account: current_account, viewed: false).paginate_by_max_id(
       limit_param(DEFAULT_ACCOUNTS_LIMIT),
       params[:max_id],
       params[:since_id]
     )
   end
 
+  def mark_as_viewed
+    follow_request = FollowRequest.find_by(id: params[:id], target_account: current_account)
+
+    if follow_request
+      follow_request.update(viewed: true)
+      render json: { message: 'Follow request marked as viewed' }, status: :ok
+    else
+      render json: { error: 'Follow request not found' }, status: :not_found
+    end
+  end
+  
   def next_path
     api_v1_follow_requests_url pagination_params(max_id: pagination_max_id) if records_continue?
   end
