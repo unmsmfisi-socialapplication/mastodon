@@ -3,9 +3,6 @@
 class Admin::Disputes::StrikesController <  Admin::BaseController
   before_action :set_strike, only: [:show]
 
-  def index
-    @strikes = current_account.strikes.latest
-  end
 
   def show
     authorize @strike, :show?
