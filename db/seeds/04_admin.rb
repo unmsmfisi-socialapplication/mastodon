@@ -11,6 +11,14 @@ if Rails.env.development?
   user.save!
   user.approve!
 
+  
+  admin2 = Account.where(username: 'admin2').first_or_initialize(username: 'admin2')
+  admin2.save(validate: false)
+
+  user_admin = User.where(email: "admin2@#{domain}").first_or_initialize(email: "admin2@#{domain}", password: 'mastodonadmin', password_confirmation: 'mastodonadmin', confirmed_at: Time.now.utc, role: UserRole.find_by(name: 'Admin'), account: admin2, agreement: true, approved: true)
+  user_admin.save!
+  user_admin.approve!
+
 
   classic_user = Account.where(username: 'user').first_or_initialize(username: 'user')
   classic_user.save(validate: false)
