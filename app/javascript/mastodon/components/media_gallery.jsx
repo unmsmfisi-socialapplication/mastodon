@@ -97,6 +97,8 @@ class Item extends PureComponent {
       height = 50;
     }
 
+    let isNeededScroll = false;
+
     const description = attachment.getIn(['translation', 'description']) || attachment.get('description');
 
     if (description?.length > 0) {
@@ -121,6 +123,8 @@ class Item extends PureComponent {
 
       const originalUrl   = attachment.get('url');
       const originalWidth = attachment.getIn(['meta', 'original', 'width']);
+      const originalHeight = attachment.getIn(['meta', 'original', 'height']);
+
 
       const hasSize = typeof originalWidth === 'number' && typeof previewWidth === 'number';
 
@@ -132,6 +136,10 @@ class Item extends PureComponent {
       const x      = ((focusX /  2) + .5) * 100;
       const y      = ((focusY / -2) + .5) * 100;
 
+      if (originalHeight > 600) {
+        isNeededScroll = true;
+      }
+
       thumbnail = (
         <a
           className='media-gallery__item-thumbnail'
@@ -139,6 +147,9 @@ class Item extends PureComponent {
           onClick={this.handleClick}
           target='_blank'
           rel='noopener noreferrer'
+          style={{
+            height: originalHeight,
+          }}
         >
           <img
             src={previewUrl}
@@ -185,7 +196,10 @@ class Item extends PureComponent {
     }
 
     return (
-      <div className={classNames('media-gallery__item', { standalone, 'media-gallery__item--tall': height === 100, 'media-gallery__item--wide': width === 100 })} key={attachment.get('id')}>
+      <div className={classNames('media-gallery__item', { standalone, 'media-gallery__item--tall': height === 100, 'media-gallery__item--wide': width === 100 })} key={attachment.get('id')} style={{
+        overflowY: isNeededScroll ? 'auto' : 'hidden',
+        height: 600
+      }}>
         <Blurhash
           hash={attachment.get('blurhash')}
           dummy={!useBlurhash}
@@ -297,12 +311,18 @@ class MediaGallery extends PureComponent {
 
     let children, spoilerButton;
 
-    const style = {};
+    let style = {};
 
     if (this.isFullSizeEligible()) {
       style.aspectRatio = `${this.props.media.getIn([0, 'meta', 'small', 'aspect'])}`;
     } else {
       style.aspectRatio = '3 / 2';
+    }
+
+    const originalHeight = media.get(0).getIn(['meta', 'original', 'height']);
+
+    if (originalHeight > 600) {
+      style = {};
     }
 
     const size     = media.size;
