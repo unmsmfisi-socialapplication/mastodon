@@ -165,7 +165,7 @@ export const Conversation = ({ conversation, scrollKey, onMoveUp, onMoveDown }) 
     open: handleClick,
     moveUp: handleHotkeyMoveUp,
     moveDown: handleHotkeyMoveDown,
-    toggleHidden: handleShowMore,
+    toggleHidden: handleShowMore, 
   };
 
   return (

@@ -25,7 +25,7 @@
     "postversion": "git push --tags",
     "postinstall": "test -d node_modules/husky && husky || echo \"husky is not installed\"",
     "start": "node ./streaming/index.js",
-    "test": "yarn lint && yarn run typecheck && yarn jest",
+    "test": "yarn lint && yarn run typecheck && yarn jest --watchAll",
     "typecheck": "tsc --noEmit"
   },
   "repository": {
