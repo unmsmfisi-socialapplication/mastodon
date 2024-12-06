@@ -33,4 +33,23 @@ describe('<AvatarComposite />', () => {
     expect(tree).toMatchSnapshot();
   });
 
+  it('renders correctly with animation disabled', () => {
+    const component = renderer.create(
+      <AvatarComposite accounts={accounts} size={100} animate={false} />
+    );
+    const tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('renders correctly with less than 4 accounts', () => {
+    const fewAccounts = fromJS([
+      { id: '1', username: 'alice', acct: 'alice@domain.com', display_name: 'Alice', avatar: '/static/alice.jpg' },
+      { id: '2', username: 'bob', acct: 'bob@domain.com', display_name: 'Bob', avatar: '/static/bob.jpg' },
+    ]);
+    const component = renderer.create(
+      <AvatarComposite accounts={fewAccounts} size={100} />
+    );
+    const tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });
