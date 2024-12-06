@@ -120,7 +120,7 @@ group :opentelemetry do
   gem 'opentelemetry-sdk', '~> 1.4', require: false
 end
 
-group :test do
+  # group :test do
   # Enable usage of all available CPUs/cores during spec runs
   gem 'flatware-rspec'
 
@@ -160,7 +160,7 @@ group :test do
 
   # Stub web requests for specs
   gem 'webmock', '~> 3.18'
-end
+  # end
 
 group :development do
   # Code linting CLI and plugins
