@@ -8,6 +8,7 @@ class Admin::Disputes::AppealNotesController < Admin::BaseController
 
     @appeal_note = current_account.appeal_notes.new(resource_params)
     @appeal      = @appeal_note.appeal
+    @strike      = @appeal.strike
 
     if @appeal_note.save
       redirect_to after_create_redirect_path, notice: I18n.t('admin.disputes.appeal_notes.created_msg')
