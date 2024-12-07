@@ -500,10 +500,16 @@ export function fetchFollowRequests() {
   return (dispatch) => {
     dispatch(fetchFollowRequestsRequest());
 
-    api().get('/api/v1/follow_requests').then(response => {
+    api().get('/api/v1/follow_requests?viewed=false').then(response => {
       const next = getLinks(response).refs.find(link => link.rel === 'next');
       dispatch(importFetchedAccounts(response.data));
       dispatch(fetchFollowRequestsSuccess(response.data, next ? next.uri : null));
+
+      // Marcar como vistas las solicitudes obtenidas
+      response.data.forEach(request => {
+        api().patch(`/api/v1/follow_requests/${request.id}/mark_as_viewed`);
+      });
+      
     }).catch(error => dispatch(fetchFollowRequestsFail(error)));
   };
 }
